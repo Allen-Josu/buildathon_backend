@@ -1,4 +1,50 @@
-const { entityModel } = require("../models");
+const { response } = require("express");
+const { entityModel, userModel } = require("../models");
+
+exports.newUser = async (request, response) => {
+    const { userId } = request.body;
+    try {
+        const existingUser = await userModel.findOne({ userId });
+
+        if (existingUser) {
+            return response
+                .status(400)
+                .json({ message: "User already exists" });
+        }
+
+        const newUser = new userModel(request.body);
+
+        await newUser.save();
+
+        return response
+            .status(200)
+            .json({ message: "User has been registered" });
+    } catch (error) {
+        return response
+            .status(500)
+            .json({ message: "An error has been occured", error: error });
+    }
+};
+
+exports.getUser = async (request, response) => {
+    const { userId, password } = request.body;
+
+    try {
+        const userData = await userModel.findOne({ userId, password });
+
+        if (!userData) {
+            return response
+                .status(400)
+                .json({ message: "Invalid credentials" });
+        }
+
+        return response.status(200).json({ results: userData, totalCount: 1 });
+    } catch (error) {
+        return response
+            .status(400)
+            .json({ message: "An error has been occured", error: error });
+    }
+};
 
 exports.newEntity = async (request, response) => {
     const { url, entity } = request.body;
