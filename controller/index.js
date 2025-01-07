@@ -1,5 +1,5 @@
 const { response } = require("express");
-const { entityModel, userModel } = require("../models");
+const { entityModel, userModel, departmentModel } = require("../models");
 
 exports.newUser = async (request, response) => {
     const { userId } = request.body;
@@ -88,6 +88,33 @@ exports.getEntity = async (request, response) => {
 
         return response.status(200).json({ results: entityData, totalCount });
     } catch (error) {
-        return response.status(500).json({ message: "An error has occurred." });
+        return response
+            .status(500)
+            .json({ message: "An error has occurred.", error });
+    }
+};
+
+exports.getDepartment = async (request, response) => {
+    const { entity } = request.query;
+
+    if (entity != "departments") {
+        return response
+            .status(400)
+            .json({ message: "No such Department found" });
+    }
+
+    try {
+        const [departmentData, totalCount] = await Promise.all([
+            departmentModel.find({ entity }),
+            departmentModel.countDocuments({ entity }),
+        ]);
+
+        return response
+            .status(200)
+            .json({ results: departmentData, totalCount });
+    } catch (error) {
+        return response
+            .status(500)
+            .json({ message: "An error has occured", error });
     }
 };

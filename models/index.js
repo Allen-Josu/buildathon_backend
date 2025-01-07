@@ -85,7 +85,48 @@ const entitySchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+const SubjectSchema = new mongoose.Schema({
+    subjectName: {
+        type: String,
+        required: true,
+    },
+    subjectCode: {
+        type: String,
+        required: true,
+    },
+});
+
+const DepartmentSchema = new mongoose.Schema(
+    {
+        department: {
+            type: String,
+            required: true,
+        },
+        course: {
+            type: String,
+            required: true,
+        },
+        entities: {
+            type: String,
+            required: true,
+        },
+        entityID: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        subjects: {
+            type: [SubjectSchema],
+            required: true,
+        },
+    },
+    {
+        timestamps: true,
+    }
+);
+
 const userModel = mongoose.model("users", userSchema);
 const entityModel = mongoose.model("entity", entitySchema);
+const departmentModel = mongoose.model("departments", DepartmentSchema);
 
-module.exports = { userModel, entityModel };
+module.exports = { userModel, entityModel, departmentModel };
