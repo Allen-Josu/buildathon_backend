@@ -10,25 +10,36 @@ const userSchema = mongoose.Schema(
             required: true,
             type: String,
         },
+        entityId: {
+            required: true,
+            type: String,
+        },
         userId: {
             required: true,
             type: String,
             unique: true,
         },
-        course: {
-            required: true,
-            type: String,
-        },
-        department: {
-            required: true,
-            type: String,
-        },
         password: {
             required: true,
             type: String,
         },
+        course: {
+            type: String,
+        },
+        department: {
+            type: String,
+        },
+        semester: {
+            type: String,
+        },
+        studentId: {
+            type: String,
+        },
+        role: {
+            type: String,
+        },
     },
-    { timestamps: true }
+    { timestamps: true },
 );
 
 const entitySchema = new mongoose.Schema(
@@ -82,7 +93,7 @@ const entitySchema = new mongoose.Schema(
             min: 0,
         },
     },
-    { timestamps: true }
+    { timestamps: true },
 );
 
 const SubjectSchema = new mongoose.Schema({
@@ -106,11 +117,11 @@ const DepartmentSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        entities: {
+        entity: {
             type: String,
             required: true,
         },
-        entityID: {
+        entityId: {
             type: String,
             required: true,
             unique: true,
@@ -119,10 +130,14 @@ const DepartmentSchema = new mongoose.Schema(
             type: [SubjectSchema],
             required: true,
         },
+        semester: {
+            type: String,
+            required: true,
+        },
     },
     {
         timestamps: true,
-    }
+    },
 );
 
 const userModel = mongoose.model("users", userSchema);
