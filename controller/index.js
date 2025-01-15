@@ -29,7 +29,7 @@ exports.newUser = async (request, response) => {
 };
 
 exports.getUser = async (request, response) => {
-    const { userId, password } = request.body;
+    const { studentId, password } = request.body;
     const { entityType, entity } = request.query;
     try {
         if (entityType == "all") {
@@ -41,7 +41,7 @@ exports.getUser = async (request, response) => {
                 .status(200)
                 .json({ results: userData, totalCount: totalCount });
         }
-        const userData = await userModel.findOne({ userId, password });
+        const userData = await userModel.findOne({ studentId, password });
 
         if (!userData) {
             return response

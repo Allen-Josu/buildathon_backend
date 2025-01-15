@@ -14,22 +14,18 @@ const userSchema = mongoose.Schema(
             required: true,
             type: String,
         },
-        userId: {
-            required: true,
-            type: String,
-            unique: true,
-        },
         password: {
             required: true,
             type: String,
+        },
+        email: {
+            type: String,
+            required: true,
         },
         course: {
             type: String,
         },
         department: {
-            type: String,
-        },
-        semester: {
             type: String,
         },
         studentId: {
@@ -91,6 +87,9 @@ const entitySchema = new mongoose.Schema(
             type: Number,
             default: 0,
             min: 0,
+        },
+        department: {
+            type: String,
         },
     },
     { timestamps: true },
