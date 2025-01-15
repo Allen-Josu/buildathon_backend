@@ -6,6 +6,8 @@ const {
     getUser,
     getDepartment,
     newDepartment,
+    newAttendance,
+    getAttendance,
 } = require("../controller");
 
 const router = express.Router();
@@ -18,5 +20,8 @@ router.get("/users", getUser);
 
 router.get("/departments", getDepartment);
 router.post("/departments", newDepartment);
+
+router.get("/attendance", getAttendance);
+router.post("/attendance", newAttendance);
 
 module.exports = router;

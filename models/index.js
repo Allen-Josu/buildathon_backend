@@ -95,7 +95,7 @@ const entitySchema = new mongoose.Schema(
     { timestamps: true },
 );
 
-const SubjectSchema = new mongoose.Schema({
+const subjectSchema = new mongoose.Schema({
     subjectName: {
         type: String,
         required: true,
@@ -106,7 +106,7 @@ const SubjectSchema = new mongoose.Schema({
     },
 });
 
-const DepartmentSchema = new mongoose.Schema(
+const departmentSchema = new mongoose.Schema(
     {
         department: {
             type: String,
@@ -126,7 +126,7 @@ const DepartmentSchema = new mongoose.Schema(
             unique: true,
         },
         subjects: {
-            type: [SubjectSchema],
+            type: [subjectSchema],
             required: true,
         },
         semester: {
@@ -139,8 +139,43 @@ const DepartmentSchema = new mongoose.Schema(
     },
 );
 
+const attendanceSchema = new mongoose.Schema({
+    entity: {
+        type: String,
+        required: true,
+    },
+    entityId: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    username: {
+        type: String,
+        required: true,
+    },
+    studentId: {
+        type: String,
+        required: true,
+    },
+    leaveDate: {
+        type: Date,
+        required: true,
+    },
+    leavePerDay: [
+        {
+            date: { type: Date, required: true },
+            reason: { type: String },
+        },
+    ],
+    totalLeavePerDay: {
+        type: Number,
+        default: 0,
+    },
+});
+
 const userModel = mongoose.model("users", userSchema);
 const entityModel = mongoose.model("entity", entitySchema);
-const departmentModel = mongoose.model("departments", DepartmentSchema);
+const departmentModel = mongoose.model("departments", departmentSchema);
+const attendanceModel = mongoose.model("attendance", attendanceSchema);
 
-module.exports = { userModel, entityModel, departmentModel };
+module.exports = { userModel, entityModel, departmentModel, attendanceModel };
