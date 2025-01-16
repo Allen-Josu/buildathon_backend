@@ -258,7 +258,7 @@ exports.updateCollections = async (request, response) => {
                 });
             }
 
-            const updatedAttendance = await attendanceModel.findOneAndUpdate(
+            await attendanceModel.findOneAndUpdate(
                 { entityId },
                 { $set: attributesToUpdate },
                 { new: true },
@@ -266,6 +266,26 @@ exports.updateCollections = async (request, response) => {
 
             return response.status(200).json({
                 message: "Entity updated successfully.",
+            });
+        } else if (entity === "notes" || entity === "pyq") {
+            const existingEntities = await entityModel.findOne({
+                entityId,
+            });
+
+            if (!existingEntities) {
+                return response.status(404).json({
+                    message:
+                        "No such entity found. Please check the entity ID.",
+                });
+            }
+            await entityModel.findOneAndUpdate(
+                { entityId },
+                { $set: attributesToUpdate },
+                { new: true },
+            );
+
+            return response.status(200).json({
+                message: "Entity Updated Successfully",
             });
         } else {
             return response
