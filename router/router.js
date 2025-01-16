@@ -8,6 +8,7 @@ const {
     newDepartment,
     newAttendance,
     getAttendance,
+    updateCollections,
 } = require("../controller");
 
 const router = express.Router();
@@ -23,5 +24,8 @@ router.post("/departments", newDepartment);
 
 router.get("/attendance", getAttendance);
 router.post("/attendance", newAttendance);
+
+
+router.patch("/update-entity",updateCollections)
 
 module.exports = router;
