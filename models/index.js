@@ -139,39 +139,44 @@ const departmentSchema = new mongoose.Schema(
     },
 );
 
-const attendanceSchema = new mongoose.Schema({
-    entity: {
-        type: String,
-        required: true,
-    },
-    entityId: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    username: {
-        type: String,
-        required: true,
-    },
-    studentId: {
-        type: String,
-        required: true,
-    },
-    leaveDate: {
-        type: Date,
-        required: true,
-    },
-    leavePerDay: [
-        {
-            date: { type: Date, required: true },
-            reason: { type: String },
+const attendanceSchema = new mongoose.Schema(
+    {
+        entity: {
+            type: String,
+            required: true,
         },
-    ],
-    totalLeavePerDay: {
-        type: Number,
-        default: 0,
+        entityId: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        username: {
+            type: String,
+            required: true,
+        },
+        studentId: {
+            type: String,
+            required: true,
+        },
+        leaveDate: {
+            type: Date,
+            required: true,
+        },
+        leavePerDay: [
+            {
+                date: { type: String, required: true },
+                reason: { type: String },
+            },
+        ],
+        totalLeavePerDay: {
+            type: Number,
+            default: 0,
+        },
     },
-});
+    {
+        timestamps: true,
+    },
+);
 
 const userModel = mongoose.model("users", userSchema);
 const entityModel = mongoose.model("entity", entitySchema);
