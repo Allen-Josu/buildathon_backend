@@ -164,13 +164,12 @@ const attendanceSchema = new mongoose.Schema(
         },
         leavePerDay: [
             {
-                date: { type: String, required: true },
+                time: { type: String, required: true },
                 reason: { type: String },
             },
         ],
         totalLeavePerDay: {
             type: Number,
-            default: 0,
         },
     },
     {
