@@ -1,15 +1,10 @@
 const express = require("express");
-const {
-    newEntity,
-    getEntity,
-    newUser,
-    getUser,
-    getDepartment,
-    newDepartment,
-    newAttendance,
-    getAttendance,
-    updateCollections,
-} = require("../controller");
+const { getEntity, newEntity } = require("../controller/entityController");
+const { getAttendance, newAttendance } = require("../controller/attendanceController");
+const { getDepartment, newDepartment } = require("../controller/departmentController");
+const { newUser, getUser } = require("../controller/userController");
+const { updateCollections } = require("../controller/updateCollection");
+
 
 const router = express.Router();
 
