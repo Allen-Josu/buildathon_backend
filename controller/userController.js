@@ -13,11 +13,8 @@ exports.newUser = async (request, response) => {
                     .json({ message: "User already exists" });
             }
         }
-
         const newUser = new userModel(request.body);
-
         await newUser.save();
-
         return response
             .status(200)
             .json({ message: "User has been registered" });
@@ -66,5 +63,49 @@ exports.getUser = async (request, response) => {
         return response
             .status(400)
             .json({ message: "An error has been occured", error: error });
+    }
+};
+
+exports.login = async (request, response) => {
+    const { studentId, password, username } = request.body;
+    const { role } = request.query;
+
+    try {
+        if (role == "user") {
+            const userData = await userModel.findOne({ studentId, password });
+
+            if (!userData) {
+                return response
+                    .status(401)
+                    .json({ message: "Invalid credentials" });
+            }
+
+            return response.status(200).json({
+                message: "Login successful",
+                results: userData,
+                totalCount: 1,
+            });
+        } else if (role == "admin") {
+            const responseData = await userModel.findOne({
+                username,
+                password,
+            });
+
+            if (!responseData) {
+                return response
+                    .status(401)
+                    .json({ message: "Invalid credentials" });
+            }
+
+            return response.status(200).json({
+                message: "Login successful",
+                results: responseData,
+                totalCount: 1,
+            });
+        }
+    } catch (error) {
+        return response
+            .status(500)
+            .json({ message: "An error has occurred", error: error.message });
     }
 };
