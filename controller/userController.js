@@ -30,7 +30,7 @@ exports.newUser = async (request, response) => {
 
 exports.getUser = async (request, response) => {
     const { studentId, password } = request.body;
-    const { entityType, entity } = request.query;
+    const { entityType, entity, entityId } = request.query;
     try {
         if (entityType == "all") {
             const [userData, totalCount] = await Promise.all([
@@ -40,6 +40,18 @@ exports.getUser = async (request, response) => {
             return response
                 .status(200)
                 .json({ results: userData, totalCount: totalCount });
+        }
+        if (entityType == "single") {
+            const userData = await userModel.findOne({ entityId });
+            if (!userData) {
+                return response
+                    .status(400)
+                    .json({ message: "Invalid credentials" });
+            }
+
+            return response
+                .status(200)
+                .json({ results: userData, totalCount: 1 });
         }
         const userData = await userModel.findOne({ studentId, password });
 

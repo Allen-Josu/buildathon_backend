@@ -28,19 +28,32 @@ exports.newEntity = async (request, response) => {
 };
 
 exports.getEntity = async (request, response) => {
-    const { entity } = request.query;
+    const { entity, entityType, entityId } = request.query;
 
     if (!["notes", "pyq"].includes(entity)) {
         return response.status(400).json({ message: "No such Entity Found." });
     }
 
     try {
-        const [entityData, totalCount] = await Promise.all([
-            entityModel.find({ entity }),
-            entityModel.countDocuments({ entity }),
-        ]);
+        if (entityType === "all") {
+            const [entityData, totalCount] = await Promise.all([
+                entityModel.find({ entity }),
+                entityModel.countDocuments({ entity }),
+            ]);
 
-        return response.status(200).json({ results: entityData, totalCount });
+            return response
+                .status(200)
+                .json({ results: entityData, totalCount });
+        } else {
+            const [entityData, totalCount] = await Promise.all([
+                entityModel.find({ entity, entityId }),
+                entityModel.countDocuments({ entity, entityId }),
+            ]);
+
+            return response
+                .status(200)
+                .json({ results: entityData, totalCount });
+        }
     } catch (error) {
         return response
             .status(500)

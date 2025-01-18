@@ -1,66 +1,59 @@
-const { attendanceModel, entityModel } = require("../models");
+const { attendanceModel, entityModel, departmentModel } = require("../models");
+
+// Map entity names to their corresponding models
+const MODEL_MAP = {
+    attendance: attendanceModel,
+    notes: entityModel,
+    pyq: entityModel,
+    departments: departmentModel,
+};
 
 exports.updateCollections = async (request, response) => {
     try {
         const { entity, entityId, attributesToUpdate } = request.body;
 
-        if (!entity) {
-            return response
-                .status(400)
-                .json({ message: "No entity provided in the request." });
+        // Validate required fields
+        if (!entity || !entityId || !attributesToUpdate) {
+            return response.status(400).json({
+                message:
+                    "Missing required fields: entity, entityId, or attributesToUpdate",
+            });
         }
 
-        if (entity === "attendance") {
-            const existingAttendance = await attendanceModel.findOne({
-                entityId,
+        // Get the appropriate model
+        const Model = MODEL_MAP[entity];
+        if (!Model) {
+            return response.status(400).json({
+                message: `Invalid entity type: ${entity}`,
             });
-
-            if (!existingAttendance) {
-                return response.status(404).json({
-                    message:
-                        "No such entity found. Please check the entity ID.",
-                });
-            }
-
-            await attendanceModel.findOneAndUpdate(
-                { entityId },
-                { $set: attributesToUpdate },
-                { new: true },
-            );
-
-            return response.status(200).json({
-                message: "Entity updated successfully.",
-            });
-        } else if (entity === "notes" || entity === "pyq") {
-            const existingEntities = await entityModel.findOne({
-                entityId,
-            });
-
-            if (!existingEntities) {
-                return response.status(404).json({
-                    message:
-                        "No such entity found. Please check the entity ID.",
-                });
-            }
-            await entityModel.findOneAndUpdate(
-                { entityId },
-                { $set: attributesToUpdate },
-                { new: true },
-            );
-
-            return response.status(200).json({
-                message: "Entity Updated Successfully",
-            });
-        } else {
-            return response
-                .status(400)
-                .json({ message: `No such entity found: ${entity}` });
         }
+
+        // Find and update the entity
+        const existingEntity = await Model.findOne({ entityId });
+        if (!existingEntity) {
+            return response.status(404).json({
+                message: "No such entity found. Please check the entity ID.",
+            });
+        }
+
+        const updatedEntity = await Model.findOneAndUpdate(
+            { entityId },
+            { $set: attributesToUpdate },
+            { new: true },
+        );
+
+        return response.status(200).json({
+            message: "Entity updated successfully",
+            data: updatedEntity,
+        });
     } catch (error) {
         console.error("Error updating collections:", error);
         return response.status(500).json({
             message: "An error occurred while updating the entity.",
-            error: error.message,
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : undefined,
         });
     }
 };
