@@ -52,7 +52,8 @@ exports.getAttendance = async (request, response) => {
         });
 
         if (!existingAttendance) {
-            return response.status(404).json({
+            return response.status(200).json({
+                results: [],
                 message: "No attendance record found for the given date.",
             });
         }
